@@ -27,8 +27,8 @@ export const site = {
 
 export const navItems = [
 	{ href: '/', label: 'Home' },
-	{ href: '/about', label: 'About' },
-	{ href: '/events', label: 'Events' },
-	{ href: '/officers', label: 'Officers' },
-	{ href: '/join', label: 'Join' },
+	{ href: '/about/', label: 'About' },
+	{ href: '/events/', label: 'Events' },
+	{ href: '/officers/', label: 'Officers' },
+	{ href: '/join/', label: 'Join' },
 ] as const;

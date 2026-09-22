@@ -26,7 +26,7 @@ const dateFormat = new Intl.DateTimeFormat('en-US', {
 	</p>
 
 	<p>
-		<a class="button" href={withBase('/join')}>Join the club</a>
+		<a class="button" href={withBase('/join/')}>Join the club</a>
 	</p>
 
 	<h2>What we do</h2>
@@ -58,7 +58,7 @@ const dateFormat = new Intl.DateTimeFormat('en-US', {
 		upcoming.length === 0 ? (
 			<p>
 				Nothing on the calendar right now — check the{' '}
-				<a href={withBase('/events')}>events page</a> for the latest.
+				<a href={withBase('/events/')}>events page</a> for the latest.
 			</p>
 		) : (
 			<ul class="card-grid">
@@ -78,5 +78,5 @@ const dateFormat = new Intl.DateTimeFormat('en-US', {
 			</ul>
 		)
 	}
-	<p><a href={withBase('/events')}>See all events →</a></p>
+	<p><a href={withBase('/events/')}>See all events →</a></p>
 </BaseLayout>
