@@ -1,0 +1,66 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { withBase } from '../lib/url';
+import { site } from '../data/site';
+
+const { discord, instagram, involvementCenter } = site.links;
+---
+
+<BaseLayout
+	title="Join"
+	description="How to join the AI Club at UNLV. Free, open to all majors."
+>
+	<h1>Join the club</h1>
+	<p class="lede">
+		There is no application and no dues. Show up to a meeting and you are a
+		member.
+	</p>
+
+	<h2>1. Come to a meeting</h2>
+	<p>
+		{site.meeting.when}<br />
+		{site.meeting.where}
+	</p>
+	<p>
+		Upcoming sessions are listed on the <a href={withBase('/events')}>events page</a>.
+	</p>
+
+	<h2>2. Get on the list</h2>
+	<p>
+		Email <a href={`mailto:${site.email}`}>{site.email}</a> and we will add you to
+		the announcements list so you know what is coming up.
+	</p>
+	{
+		(discord || instagram || involvementCenter) && (
+			<ul>
+				{discord && (
+					<li>
+						<a href={discord}>Join the Discord</a>
+					</li>
+				)}
+				{instagram && (
+					<li>
+						<a href={instagram}>Follow us on Instagram</a>
+					</li>
+				)}
+				{involvementCenter && (
+					<li>
+						<a href={involvementCenter}>Find us on the UNLV Involvement Center</a>
+					</li>
+				)}
+			</ul>
+		)
+	}
+
+	<h2>Do I need experience?</h2>
+	<p>
+		No. Sessions are built so that someone attending their first meeting can
+		follow along, and there is always someone around to help when you get stuck.
+	</p>
+
+	<h2>Do I need to be a computer science major?</h2>
+	<p>
+		No. AI touches basically every field now, and some of the most interesting
+		projects come from people who know a domain we do not.
+	</p>
+</BaseLayout>

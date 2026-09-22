@@ -1,0 +1,53 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { officers } from '../data/officers';
+import { site } from '../data/site';
+
+const unfilled = officers.some((officer) => officer.name.startsWith('TODO'));
+---
+
+<BaseLayout title="Officers" description="Who runs the club this year.">
+	<h1>Officers</h1>
+	{
+		unfilled && (
+			<p class="placeholder">
+				This roster is still a placeholder. Edit <code>src/data/officers.ts</code>{' '}
+				to add the real officers.
+			</p>
+		)
+	}
+	<p class="lede">
+		Officers are elected by the membership each year. Any member can run.
+	</p>
+
+	<ul class="card-grid">
+		{
+			officers.map((officer) => (
+				<li class="card">
+					<h3>{officer.role}</h3>
+					<p class="name">{officer.name}</p>
+					{officer.blurb && <p>{officer.blurb}</p>}
+					{officer.email && (
+						<p>
+							<a href={`mailto:${officer.email}`}>{officer.email}</a>
+						</p>
+					)}
+				</li>
+			))
+		}
+	</ul>
+
+	<h2>Interested in running?</h2>
+	<p>
+		Elections happen at the end of the spring semester. Email{' '}
+		<a href={`mailto:${site.email}`}>{site.email}</a> if you want to know what a
+		role actually involves before you commit.
+	</p>
+</BaseLayout>
+
+<style>
+	.name {
+		font-weight: 600;
+		color: var(--text);
+	}
+</style>

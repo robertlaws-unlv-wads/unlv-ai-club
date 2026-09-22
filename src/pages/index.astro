@@ -1,18 +1,82 @@
 ---
-// Strip any trailing slash so `${base}/path` never produces a double slash.
-const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { withBase } from '../lib/url';
+import { site } from '../data/site';
+import { getCollection } from 'astro:content';
+
+const now = new Date();
+const upcoming = (await getCollection('events', ({ data }) => !data.draft))
+	.filter((event) => (event.data.end ?? event.data.date) >= now)
+	.sort((a, b) => a.data.date.valueOf() - b.data.date.valueOf())
+	.slice(0, 3);
+
+const dateFormat = new Intl.DateTimeFormat('en-US', {
+	dateStyle: 'medium',
+	timeStyle: 'short',
+	timeZone: 'America/Los_Angeles',
+});
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
-		<link rel="icon" href={`${base}/favicon.ico`} />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout title={site.name}>
+	<h1>Artificial intelligence, figured out together.</h1>
+	<p class="lede">
+		{site.shortName} is a student organization at UNLV for anyone curious about AI —
+		from people who have never written a line of code to those training their own
+		models. Come to one meeting and see.
+	</p>
+
+	<p>
+		<a class="button" href={withBase('/join')}>Join the club</a>
+	</p>
+
+	<h2>What we do</h2>
+	<ul class="card-grid">
+		<li class="card">
+			<h3>Workshops</h3>
+			<p>
+				Hands-on sessions where everyone builds the same thing together, starting
+				from zero.
+			</p>
+		</li>
+		<li class="card">
+			<h3>Project nights</h3>
+			<p>
+				Bring what you are working on, get unstuck, and find people to build with.
+			</p>
+		</li>
+		<li class="card">
+			<h3>Talks</h3>
+			<p>
+				Researchers, industry folks, and students sharing what they are working on
+				and what they have learned.
+			</p>
+		</li>
+	</ul>
+
+	<h2>Upcoming events</h2>
+	{
+		upcoming.length === 0 ? (
+			<p>
+				Nothing on the calendar right now — check the{' '}
+				<a href={withBase('/events')}>events page</a> for the latest.
+			</p>
+		) : (
+			<ul class="card-grid">
+				{upcoming.map((event) => (
+					<li class="card">
+						<h3>{event.data.title}</h3>
+						<p>
+							<time datetime={event.data.date.toISOString()}>
+								{dateFormat.format(event.data.date)}
+							</time>
+							<br />
+							{event.data.location}
+						</p>
+						<p>{event.data.summary}</p>
+					</li>
+				))}
+			</ul>
+		)
+	}
+	<p><a href={withBase('/events')}>See all events →</a></p>
+</BaseLayout>

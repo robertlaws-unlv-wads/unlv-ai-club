@@ -1,0 +1,50 @@
+---
+import { site } from '../data/site';
+
+const year = new Date().getFullYear();
+const social = Object.entries(site.links).filter(([, url]) => url);
+---
+
+<footer class="site-footer">
+	<div class="container">
+		<p>
+			{site.name} — a registered student organization at the {site.university}.
+		</p>
+		{
+			social.length > 0 && (
+				<ul class="social">
+					{social.map(([name, url]) => (
+						<li>
+							<a href={url}>{name}</a>
+						</li>
+					))}
+				</ul>
+			)
+		}
+		<p class="fine">&copy; {year} {site.name}</p>
+	</div>
+</footer>
+
+<style>
+	.site-footer {
+		border-top: 1px solid var(--border);
+		background: var(--bg-subtle);
+		padding-block: 2rem;
+		color: var(--text-muted);
+		font-size: 0.95rem;
+	}
+
+	.social {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem 1.25rem;
+		list-style: none;
+		margin: 0 0 1rem;
+		padding: 0;
+		text-transform: capitalize;
+	}
+
+	.fine {
+		margin: 0;
+	}
+</style>

@@ -1,0 +1,101 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
+
+const now = new Date();
+const all = await getCollection('events', ({ data }) => !data.draft);
+
+const upcoming = all
+	.filter((event) => (event.data.end ?? event.data.date) >= now)
+	.sort((a, b) => a.data.date.valueOf() - b.data.date.valueOf());
+
+const past = all
+	.filter((event) => (event.data.end ?? event.data.date) < now)
+	.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+// Rendered bodies have to be resolved up front — this is a static page.
+const upcomingWithBody = await Promise.all(
+	upcoming.map(async (event) => ({ event, Content: (await render(event)).Content }))
+);
+
+const dateFormat = new Intl.DateTimeFormat('en-US', {
+	dateStyle: 'full',
+	timeStyle: 'short',
+	timeZone: 'America/Los_Angeles',
+});
+const shortDate = new Intl.DateTimeFormat('en-US', {
+	dateStyle: 'medium',
+	timeZone: 'America/Los_Angeles',
+});
+---
+
+<BaseLayout title="Events" description="Upcoming meetings, workshops, and talks.">
+	<h1>Events</h1>
+
+	<h2>Upcoming</h2>
+	{
+		upcomingWithBody.length === 0 ? (
+			<p>Nothing scheduled right now. Check back soon.</p>
+		) : (
+			<ul class="event-list">
+				{upcomingWithBody.map(({ event, Content }) => (
+					<li class="card">
+						<h3>{event.data.title}</h3>
+						<p class="meta">
+							<time datetime={event.data.date.toISOString()}>
+								{dateFormat.format(event.data.date)}
+							</time>
+							<br />
+							{event.data.location}
+						</p>
+						<p>{event.data.summary}</p>
+						<div class="body">
+							<Content />
+						</div>
+					</li>
+				))}
+			</ul>
+		)
+	}
+
+	{
+		past.length > 0 && (
+			<>
+				<h2>Past events</h2>
+				<ul class="past">
+					{past.map((event) => (
+						<li>
+							<time datetime={event.data.date.toISOString()}>
+								{shortDate.format(event.data.date)}
+							</time>{' '}
+							— {event.data.title}
+						</li>
+					))}
+				</ul>
+			</>
+		)
+	}
+</BaseLayout>
+
+<style>
+	.event-list {
+		list-style: none;
+		margin: 1.5rem 0 0;
+		padding: 0;
+		display: grid;
+		gap: 1.25rem;
+	}
+
+	.meta {
+		color: var(--text-muted);
+	}
+
+	.body :global(p:last-child) {
+		margin-bottom: 0;
+	}
+
+	.past {
+		color: var(--text-muted);
+		padding-left: 1.1rem;
+	}
+</style>

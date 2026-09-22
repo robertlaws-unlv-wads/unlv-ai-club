@@ -1,0 +1,44 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { withBase } from '../lib/url';
+import { site } from '../data/site';
+---
+
+<BaseLayout
+	title="About"
+	description={`What the ${site.shortName} at UNLV does and who it is for.`}
+>
+	<h1>About the club</h1>
+	<p class="lede">
+		We are a student-run group at UNLV built around learning artificial
+		intelligence in public — together, out loud, and without pretending we
+		already know everything.
+	</p>
+
+	<h2>Who it is for</h2>
+	<p>
+		Every major, every year, every skill level. Plenty of our members came in
+		having never trained a model or written Python. The only real prerequisite is
+		wanting to understand how this stuff actually works.
+	</p>
+
+	<h2>When we meet</h2>
+	<p>
+		{site.meeting.when}<br />
+		{site.meeting.where}
+	</p>
+
+	<h2>What a meeting looks like</h2>
+	<p>
+		Most weeks fall into one of three shapes: a workshop where we all build the
+		same thing step by step, a project night where people work on their own
+		things and help each other, or a talk from someone doing AI work in research
+		or industry.
+	</p>
+
+	<h2>Questions?</h2>
+	<p>
+		Email us at <a href={`mailto:${site.email}`}>{site.email}</a>, or just show up
+		to a meeting — see the <a href={withBase('/events')}>events page</a>.
+	</p>
+</BaseLayout>
