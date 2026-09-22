@@ -37,3 +37,25 @@ astro.config.mjs Astro configuration
 1. Create a branch for your change.
 2. Run `npm run build` to confirm the site still builds.
 3. Open a pull request.
+
+## Deployment
+
+The site deploys to GitHub Pages automatically on every push to `main`, via
+[.github/workflows/deploy.yml](.github/workflows/deploy.yml).
+
+Live at: https://robertlaws-unlv-wads.github.io/unlv-ai-club/
+
+Because it is a project site, all pages live under the `/unlv-ai-club` base
+path. Use Astro's `base` when writing links so they work in both dev and
+production:
+
+```astro
+---
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+<a href={`${base}/events`}>Events</a>
+```
+
+If the club moves to a custom domain, set `site` to that domain in
+`astro.config.mjs`, delete the `base` option, and add a `public/CNAME` file
+containing the domain.
